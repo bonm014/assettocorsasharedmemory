@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -32,7 +32,7 @@ namespace AssettoCorsaSharedMemory
         private AC_MEMORY_STATUS memoryStatus = AC_MEMORY_STATUS.DISCONNECTED;
         public bool IsRunning { get { return (memoryStatus == AC_MEMORY_STATUS.CONNECTED); } }
 
-        private AC_STATUS gameStatus = AC_STATUS.AC_OFF;
+        private ACC_STATUS gameStatus = ACC_STATUS.ACC_OFF;
 
         public event GameStatusChangedHandler GameStatusChanged;
         public virtual void OnGameStatusChanged(GameStatusEventArgs e)
@@ -43,12 +43,12 @@ namespace AssettoCorsaSharedMemory
             }
         }
 
-        public static readonly Dictionary<AC_STATUS, string> StatusNameLookup = new Dictionary<AC_STATUS, string>
+        public static readonly Dictionary<ACC_STATUS, string> StatusNameLookup = new Dictionary<ACC_STATUS, string>
         {
-            { AC_STATUS.AC_OFF, "Off" },
-            { AC_STATUS.AC_LIVE, "Live" },
-            { AC_STATUS.AC_PAUSE, "Pause" },
-            { AC_STATUS.AC_REPLAY, "Replay" },
+            { ACC_STATUS.ACC_OFF, "Off" },
+            { ACC_STATUS.ACC_LIVE, "Live" },
+            { ACC_STATUS.ACC_PAUSE, "Pause" },
+            { ACC_STATUS.ACC_REPLAY, "Replay" },
         };
 
         public AssettoCorsa()
@@ -220,7 +220,10 @@ namespace AssettoCorsaSharedMemory
                 if (gameStatus != e.Graphics.Status)
                 {
                     gameStatus = e.Graphics.Status;
-                    GameStatusChanged(this, new GameStatusEventArgs(gameStatus));
+                    if (GameStatusChanged != null)
+                    {
+                        GameStatusChanged(this, new GameStatusEventArgs(gameStatus));
+                    }
                 }
             }
         }
